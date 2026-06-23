@@ -1,3 +1,6 @@
+from copy import copy
+
+
 def parse_closing_comment(comment):
 
     parts = [
@@ -107,9 +110,11 @@ def populate_checklist(
             question_no
         ]
 
-        ws[f"F{excel_row}"] = str(
+        status = str(
             audit_row["Status Detail"]
         ).strip()
+
+        ws[f"F{excel_row}"] = status
 
         ws[f"G{excel_row}"] = str(
             audit_row["Key Observation"]
@@ -124,6 +129,36 @@ def populate_checklist(
         ws[f"I{excel_row}"] = parsed["status"]
 
         ws[f"J{excel_row}"] = parsed["timeline"]
+
+        if status.upper() in [
+            "NO",
+            "NA"
+        ]:
+
+            for col in [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G",
+                "H",
+                "I",
+                "J"
+            ]:
+
+                cell = ws[
+                    f"{col}{excel_row}"
+                ]
+
+                font = copy(
+                    cell.font
+                )
+
+                font.bold = True
+
+                cell.font = font
 
         populated_count += 1
 
