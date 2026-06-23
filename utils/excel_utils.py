@@ -136,11 +136,6 @@ def populate_checklist(
         ]:
 
             for col in [
-                "A",
-                "B",
-                "C",
-                "D",
-                "E",
                 "F",
                 "G",
                 "H",
