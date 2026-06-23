@@ -4,17 +4,9 @@ import fitz
 import pandas as pd
 import json
 import subprocess
-import shutil
 
 from pypdf import PdfReader, PdfWriter
 
-
-soffice_path = shutil.which("soffice")
-
-if not soffice_path:
-    raise Exception(
-        "LibreOffice not installed"
-    )
 
 
 def extract_pdf_header(pdf_path):
@@ -110,6 +102,9 @@ def merge_pdfs(pdf1, pdf2, pdf3, output_pdf):
 
     for pdf_file in [pdf1, pdf2, pdf3]:
 
+        if not pdf_file:
+            continue
+        
         reader = PdfReader(pdf_file)
 
         for page in reader.pages:
@@ -118,10 +113,40 @@ def merge_pdfs(pdf1, pdf2, pdf3, output_pdf):
     with open(output_pdf, "wb") as output_file:
         writer.write(output_file)
 
+import shutil
+import subprocess
+import os
+
+
 def excel_to_pdf(
     excel_path,
     pdf_path
 ):
+
+    soffice_path = shutil.which(
+        "soffice"
+    )
+
+    if not soffice_path:
+
+        possible_paths = [
+            r"C:\Program Files\LibreOffice\program\soffice.exe",
+            r"C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+        ]
+
+        for path in possible_paths:
+
+            if os.path.exists(path):
+
+                soffice_path = path
+
+                break
+
+    if not soffice_path:
+
+        raise Exception(
+            "LibreOffice not installed"
+        )
 
     output_dir = os.path.dirname(
         os.path.abspath(pdf_path)
@@ -133,9 +158,9 @@ def excel_to_pdf(
             "--headless",
             "--convert-to",
             "pdf",
+            os.path.abspath(excel_path),
             "--outdir",
-            output_dir,
-            os.path.abspath(excel_path)
+            output_dir
         ],
         check=True
     )
@@ -147,7 +172,11 @@ def excel_to_pdf(
         )[0] + ".pdf"
     )
 
-    if os.path.abspath(generated_pdf) != os.path.abspath(pdf_path):
+    if os.path.abspath(
+        generated_pdf
+    ) != os.path.abspath(
+        pdf_path
+    ):
 
         os.replace(
             generated_pdf,

@@ -26,7 +26,7 @@ def generate_report(
     client,
     template_type,
     pdf_file,
-    annexure_pdf
+    annexure_pdf=None
 ):
 
     with open(
@@ -134,12 +134,23 @@ def generate_report(
         "Evidence PDF created"
     )
 
-    merge_pdfs(
-        generated_pdf,
-        evidence_pdf,
-        annexure_pdf,
-        final_report_pdf
-    )
+    if annexure_pdf:
+
+        merge_pdfs(
+            generated_pdf,
+            evidence_pdf,
+            annexure_pdf,
+            final_report_pdf
+        )
+
+    else:
+
+        merge_pdfs(
+            generated_pdf,
+            evidence_pdf,
+            None,
+            final_report_pdf
+        )
 
     print(
         "Final report created"

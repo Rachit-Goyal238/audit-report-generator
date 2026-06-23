@@ -69,7 +69,6 @@ if st.button("Generate Report"):
     elif not all([
         master_file,
         report_pdf,
-        annexure_pdf
     ]):
 
         st.error(
@@ -102,15 +101,23 @@ if st.button("Generate Report"):
                         report_pdf.getbuffer()
                     )
 
-                annexure_path = os.path.join(
-                    temp_dir,
-                    annexure_pdf.name
-                )
+                annexure_path = None
 
-                with open(annexure_path, "wb") as f:
-                    f.write(
-                        annexure_pdf.getbuffer()
+                if annexure_pdf:
+
+                    annexure_path = os.path.join(
+                        temp_dir,
+                        annexure_pdf.name
                     )
+
+                    with open(
+                        annexure_path,
+                        "wb"
+                    ) as f:
+
+                        f.write(
+                            annexure_pdf.getbuffer()
+                        )
 
                 with st.spinner(
                     "Generating report..."
