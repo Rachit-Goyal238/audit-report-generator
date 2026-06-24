@@ -8,7 +8,6 @@ import subprocess
 from pypdf import PdfReader, PdfWriter
 
 
-
 def extract_pdf_header(pdf_path):
 
     pdf = fitz.open(pdf_path)
