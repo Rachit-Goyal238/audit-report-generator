@@ -3,7 +3,7 @@ import tempfile
 import os
 import zipfile
 import json
-from main import generate_report
+from engines.tata.tata_main import generate_report
 
 st.set_page_config(
     page_title="Audit Report Generator",
