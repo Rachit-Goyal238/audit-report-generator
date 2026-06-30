@@ -34,16 +34,27 @@ with open(
 
 client = st.selectbox(
     "Select Client",
-    list(
-        template_repository.keys()
-    )
+    [
+        "TATA Capital",
+        "YesBank"
+    ]
 )
+
+if client == "YesBank":
+
+    st.link_button(
+        "Open YesBank Report Generator",
+        "https://audit-report-generator-yesbank.streamlit.app/",
+        use_container_width=True
+    )
+
+    st.stop()
 
 template_type = st.selectbox(
     "Select Template",
     list(
         template_repository[
-            client
+            "TATA Capital"
         ].keys()
     )
 )

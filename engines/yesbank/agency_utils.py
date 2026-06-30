@@ -3,7 +3,11 @@ from openpyxl.styles import Alignment
 
 def populate_agency(
     agency_ws,
-    kaf_ws
+    kaf_ws,
+    kaf_observation_col,
+    status_col,
+    errors_col,
+    agency_observation_col
 ):
 
     grouped = {}
@@ -20,7 +24,7 @@ def populate_agency(
 
         observation = kaf_ws.cell(
             row,
-            9
+            kaf_observation_col
         ).value
 
         if (
@@ -69,18 +73,6 @@ def populate_agency(
             sr_no
         ]
 
-        count = len(
-            observations
-        )
-
-        if count > 4:
-
-            errors = ">4"
-
-        else:
-
-            errors = count
-
         unique = []
 
         for obs in observations:
@@ -91,24 +83,38 @@ def populate_agency(
                     obs
                 )
 
+        count = len(
+            unique
+        )
+
+        if count > 4:
+
+            errors = ">4"
+
+        else:
+
+            errors = count
+
         observation_text = "\n".join(
             unique
         )
 
-        # Status Complied = No
+        # Status Complied
         agency_ws.cell(
             row,
-            8
+            status_col
         ).value = "No"
 
+        # Number of Errors
         agency_ws.cell(
             row,
-            9
+            errors_col
         ).value = errors
 
+        # Observation
         obs_cell = agency_ws.cell(
             row,
-            12
+            agency_observation_col
         )
 
         obs_cell.value = observation_text

@@ -4,7 +4,8 @@ import pandas as pd
 def populate_rating(
     ws,
     base_data_file,
-    agency_name
+    agency_name,
+    audit_period
 ):
 
     df = pd.read_excel(
@@ -13,7 +14,6 @@ def populate_rating(
         keep_default_na=False
     )
 
-    # Use Vendor Name from Column H only
     vendor_column = (
         df.iloc[:, 7]
         .astype(str)
@@ -26,7 +26,7 @@ def populate_rating(
         agency_name.strip()
     ]
 
-    if len(df) == 0:
+    if df.empty:
 
         raise Exception(
             f"No record found for agency '{agency_name}' in Audited sheet."
@@ -35,7 +35,7 @@ def populate_rating(
     row = df.iloc[0]
 
     # -----------------------------
-    # Populate Rating Header
+    # Rating Header
     # -----------------------------
 
     # Vendor Name
@@ -43,6 +43,9 @@ def populate_rating(
 
     # Audit Date
     ws["C7"] = row.iloc[18]
+
+    # Audit Period
+    ws["E7"] = audit_period
 
     # CM Name
     ws["C8"] = row.iloc[23]
@@ -56,7 +59,7 @@ def populate_rating(
     # CCL Name (RCM)
     ws["E8"] = row.iloc[24]
 
-    # Agency Discussion Person (Manager)
+    # Agency Person
     ws["E10"] = row.iloc[15]
 
     # Agency Address

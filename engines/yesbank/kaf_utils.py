@@ -74,12 +74,13 @@ def ensure_capacity(
 def populate_kaf(
     ws,
     kaf_file,
-    agency_name
+    agency_name,
+    source_sheet
 ):
 
     df = pd.read_excel(
         kaf_file,
-        sheet_name="Collection",
+        sheet_name=source_sheet,
         keep_default_na=False
     )
 
@@ -92,7 +93,7 @@ def populate_kaf(
     if "Vendor Name" not in df.columns:
 
         raise Exception(
-            "'Vendor Name' column not found in Collection sheet."
+            f"'Vendor Name' column not found in {source_sheet} sheet."
         )
 
     df = df[
@@ -105,17 +106,53 @@ def populate_kaf(
 
     start_row = 2
 
-    template_style_row = 15
-    template_end_row = 16
-    template_capacity = 15
+    if source_sheet == "Collection":
 
-    ensure_capacity(
-        ws,
-        len(df),
-        template_style_row,
-        template_end_row,
-        template_capacity
-    )
+        template_style_row = 15
+        template_end_row = 16
+        template_capacity = 15
+
+        ensure_capacity(
+            ws,
+            len(df),
+            template_style_row,
+            template_end_row,
+            template_capacity
+        )
+
+    elif source_sheet == "Repo":
+
+        template_style_row = 7
+        template_end_row = 8
+        template_capacity = 6
+
+        ensure_capacity(
+            ws,
+            len(df),
+            template_style_row,
+            template_end_row,
+            template_capacity
+        )
+
+    elif source_sheet == "Final Stock":
+
+        template_style_row = 7
+        template_end_row = 8
+        template_capacity = 6
+
+        ensure_capacity(
+            ws,
+            len(df),
+            template_style_row,
+            template_end_row,
+            template_capacity
+        )
+
+    else:
+
+        raise Exception(
+            f"Unsupported KAF sheet: {source_sheet}"
+        )
 
     for idx, row in enumerate(
         df.itertuples(index=False)
